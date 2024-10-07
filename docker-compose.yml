@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: compal-pg
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "compal"
+      POSTGRES_PASSWORD: "compal2024"
+      POSTGRES_DB: "compal"
+      PGDATA: "/data/postgres"
+    volumes:
+      - ./data/pg:/data/postgres
+
+  backend:
+    container_name: compal-backend
+    build: .
+    ports:
+      - "3333:3333"
+    environment:
+      DATABASE_HOST: "postgres"
+      DATABASE_PORT: 5432
+      DATABASE_USER: "compal"
+      DATABASE_PASSWORD: "compal2024"
+      DATABASE_NAME: "compal"
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app

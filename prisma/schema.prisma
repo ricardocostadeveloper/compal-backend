@@ -1,0 +1,335 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String @id @default(uuid())
+  nome      String
+  email     String @unique
+  password  String
+  tipo      String
+  createdAt         DateTime @default(now()) @map("created_at")
+  updateAt          DateTime? @updatedAt @map("update_at")
+  transportadora Transportadora[]
+  produto Produtos[]
+  bid Bid[]
+  validacao  Validacao[]
+
+  @@map("users")
+}
+
+model Produtos {
+  id                String @id @default(uuid())
+  partNumber        String @unique
+  dimensaoCaixa     String @map("dimensao_caixa")
+  standard  String?
+  upper     String?
+  lower     String?
+  quantidadeMax  String? @map("quantidade_max")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updateAt          DateTime? @updatedAt @map("update_at")
+  autorId           String @map("autor_id")
+
+  autor User @relation(fields: [autorId], references: [id])
+  valicacao Validacao[]
+  @@map("produtos")
+}
+
+model Destino {
+  id        String @id @default(uuid())
+  descricao String
+  aereporto String
+
+  bid Bid[]
+
+  @@map("destinos")
+}
+
+model Origem {
+  id        String @id @default(uuid())
+  descricao String
+  aereporto String
+  
+  bid Bid[]
+
+  @@map("origens")
+}
+
+model Transportadora {
+  id        String @id @default(uuid())
+  descricao String
+  autorId   String @map("autor_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt  DateTime? @updatedAt @map("update_at")
+
+  autor User @relation(fields: [autorId], references: [id])
+  bid Bid[]
+
+  @@map("transportadoras")
+}
+
+model Bid {
+  id        String @id @default(uuid())
+  tipoModal  String @map("tipo_modal")
+  origemId  String @map("origem_id")
+  destinoId String @map("destino_id")
+  transportadoraId String @map("transportadora_id")
+  autorId   String @map("autor_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt  DateTime? @updatedAt @map("update_at")
+
+  origem Origem @relation(fields: [origemId], references: [id])
+  destino Destino @relation(fields: [destinoId], references: [id])
+  transportadora Transportadora @relation(fields: [transportadoraId], references: [id])
+  autor User @relation(fields: [autorId], references: [id])
+  
+  seguroTransportadora SeguroTransportadora[]
+  outros Outros[]
+  valorGeralDrr ValorGeralDrr[] 
+  fretes Fretes[]
+  valicacao Validacao[]
+  
+  @@map("bids")
+}
+
+model SeguroTransportadora {
+  id        String @id @default(uuid())
+  descricao String
+  valor     String
+  bidId     String @map("bid_id")
+
+  bid Bid @relation(fields: [bidId], references: [id])  
+
+  @@map("seguro_transportadora")
+}
+
+model Outros {
+  id        String @id @default(uuid())
+  descricao String
+  valor     String
+  bidId     String @map("bid_id")
+
+  bid Bid @relation(fields: [bidId], references: [id])  
+
+  @@map("outros")
+}
+
+model ValorGeralDrr {
+  id        String @id @default(uuid())
+  descricao String
+  valor     String
+  bidId     String @map("bid_id")
+
+  bid Bid @relation(fields: [bidId], references: [id])  
+
+  @@map("valor_geral_drr")
+}
+model Fretes {
+  id        String @id @default(uuid())
+  descricao String
+  valorMinimo     String
+  valorKg     String
+  bidId     String @map("bid_id")
+
+  bid Bid @relation(fields: [bidId], references: [id])  
+
+  @@map("fretes")
+}
+
+
+
+
+///////////////////////////////////////////////////
+// tabelas direcionadas pra coleta de dados CTE
+model Cte {
+  id          String @id @default(uuid())
+  numeroCte   String @map("numero_cte")
+  modal       String
+  observacao  String
+  dataEmissao     String @map("data_solicitacao")
+  nomeTransportadora  String @map("nome_transportadora")
+  status      String
+  observacoes String
+  enderecoId  String @map("endereco_id")
+  notaFiscal NotaFiscal[]
+
+  @@map("cte")
+}
+
+
+model NotaFiscal {
+  id                String @id @default(uuid())
+  numeroNf          String @map("numero_nf")
+  cteId             String @map("cte_id")
+  valorCarga        Decimal @db.Decimal(15, 2)
+  quantidadeCarga   Decimal @db.Decimal(15, 2)
+  valorVolumes      Decimal @db.Decimal(15, 2)
+  valorPesoCubado   Decimal @db.Decimal(15, 2)
+  chaveNf           String  @unique
+  cte Cte @relation(fields: [cteId], references: [id])
+  produtoNf ProdutoNf[]
+  @@map("notas_fiscais")
+}
+
+model ProdutoNf {
+  id          String @id @default(uuid())
+  descricao   String
+  nfId String @map("nf_id")
+
+  notaFiscal NotaFiscal @relation(fields: [nfId], references: [id])
+
+  @@map("produtos_nf")
+}
+
+//////////////////////////////////////////////
+model CteArquivo {
+  id               String           @id @default(uuid())
+  chaveAcesso      String        @unique
+  modalCte         String
+  numeroCte        String
+  numeroPedido     String?
+  chaveNFE         String?
+  nomeMotorista    String
+  cpfMotorista     String
+  placaMotorista   String
+  emissao          DateTime
+  valorRecebido    Decimal       @db.Decimal(15, 2)
+  valorFretePeso   Decimal       @db.Decimal(15, 2) ///comparar com o valor calculado das dimensões
+  valorfrete       Decimal       @db.Decimal(15, 2)
+  valorTaxa        Decimal       @db.Decimal(15, 2) ///comparar valor com tabela BID
+  valorCarga       Decimal       @db.Decimal(15, 2) //comparar com valor nota fiscal 
+  valorPesoBruto   Decimal       @db.Decimal(15, 2) ///comparar com meu calculo feito no backend
+  valorVolumes     Decimal       @db.Decimal(15, 2)
+  valorPesoCubado  Decimal       @db.Decimal(15, 2)
+  createdAt        DateTime      @default(now())
+
+  remetente     RemetenteArquivo[]
+  emitente      EmitenteArquivo[]
+  destinatario  DestinatarioArquivo[]
+  imposto       ImpostoArquivo[]
+  nfe       Nfe[]
+  valicacao Validacao[]
+  
+  @@map("cte_arquivo")
+}
+
+model Nfe {
+  id    String  @id @default(uuid())
+  chave String
+  partNumber  String
+  quantidade  Int
+  valorUnitario Float
+  valortotal  Float
+  descricao String
+  cteId String
+  cte CteArquivo @relation(fields: [cteId], references: [id])
+}
+
+model EmitenteArquivo {
+  id                String  @id @default(uuid())
+  cnpj              String 
+  inscricaoEstadual String  @map("inscricao_estadual")
+  nome              String
+  nomeFantasia      String @map("nome_fantasia")
+  logradouro    String?
+  numero        String?
+  complemento   String?
+  bairro        String?
+  municipio     String?
+  codMunicipio  String? @map("cod_municipio")
+  cep           String?
+  estado        String?
+  telefone      String?
+  cteId         String
+  cte      CteArquivo  @relation(fields: [cteId], references: [id])
+
+  @@map("emitente_arquivo")
+}
+
+model RemetenteArquivo {
+  id                String  @id @default(uuid())
+  cnpj              String
+  inscricaoEstadual String  @map("inscricao_estadual")
+  nome              String
+  nomeFantasia      String @map("nome_fantasia")
+  logradouro    String?
+  numero        String?
+  complemento   String?
+  bairro        String?
+  municipio     String?
+  codMunicipio  String? @map("cod_municipio")
+  cep           String?
+  estado        String?
+  telefone      String?
+  cteId         String
+  ctes      CteArquivo  @relation(fields: [cteId], references: [id])
+
+  @@map("remetente_arquivo")
+}
+
+model DestinatarioArquivo {
+  id        String     @id @default(uuid())
+  cnpj      String
+  inscricaoEstadual String  @map("inscricao_estadual")
+  nome      String
+  fone      String
+  logradouro    String?
+  numero        String?
+  complemento   String?
+  bairro        String?
+  municipio     String?
+  codMunicipio  String? @map("cod_municipio")
+  cep           String?
+  estado        String?
+  cteId         String
+  ctes      CteArquivo  @relation(fields: [cteId], references: [id])
+
+  @@map("destinatario_arquivo")
+}
+
+
+model ImpostoArquivo {
+  id          String  @id @default(uuid())
+  valorBaseCalculo        String @map("valor_base_calculo")
+  valorPercentualCalculo  String @map("valor_percentual_calculo")
+  valorIcms               String @map("valor_icms")
+  cteId                   String
+  cte   CteArquivo  @relation(fields: [cteId], references: [id])
+    @@map("imposto_arquivo")
+
+}
+
+//////////////////tabela de comparação e logs de divergencia///////////////
+
+model Validacao {
+  id          String @id @default(uuid())
+  produtoId   String
+  bidId       String
+  cteId       String
+  autorId     String
+  status      String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updateAt          DateTime? @updatedAt @map("update_at")
+  user  User        @relation(fields: [autorId], references: [id])
+  produto  Produtos  @relation(fields: [produtoId], references: [id])
+  bid  Bid          @relation(fields: [bidId], references: [id])
+  cte  CteArquivo   @relation(fields: [cteId], references: [id])
+  divergencia Divergencias[]
+  @@map("validacao")
+}
+
+model Divergencias {
+  id  String @id @default(uuid())
+  nomenclatura     String?
+  valorEsperado   String
+  valorDivergente String
+  validacaoId     String
+  validacao  Validacao   @relation(fields: [validacaoId], references: [id])
+  @@map("divergencias")
+}

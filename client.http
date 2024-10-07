@@ -1,0 +1,347 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
+
+########## rotas relacionadas a usuario #############
+# @name criar_usuario
+POST {{baseUrl}}/usuario
+Content-Type: application/json
+
+{
+"nome": "joelson",
+"email": "joelson7@gmail.com",
+"password":"1234",
+"tipo":"1"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+"email": "joelson5@gmail.com",
+"password":"1234"
+}
+
+###
+
+########## rotas relacionadas a transportadoras #############
+
+# @name criar_transportadora
+POST {{baseUrl}}/transportadora
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"descricao": "tamlog"
+}
+
+########## rotas relacionadas a origem #############
+###
+# @name criar_origem
+POST {{baseUrl}}/origem
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"descricao": "teste2",
+"aereporto": "teste"
+}
+
+###
+
+
+# @name table_origem
+GET {{baseUrl}}/origem?page=0
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+
+# @name deletar_origem
+DELETE {{baseUrl}}/origem/23264398-8967-47e0-9c48-e962177f1844
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### 
+
+########## rotas relacionadas a destino #############
+# @name criar_destino
+POST {{baseUrl}}/destino
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"descricao": "AGP Barueri",
+"aereporto": "VRP"
+}
+
+###
+########## rotas relacionadas a bid #############
+
+# @name criar_bid
+POST {{baseUrl}}/criarbid
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"modal": "Rodoviário",
+"origem": "MANAUS",
+"destino": "AGP Barueri - VRP",
+"transportadora": "SUPERSONIC"
+}
+
+###
+# @name table_bid
+GET {{baseUrl}}/bid?page=0
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+###
+
+########## rotas relacionadas a transportadora #############
+###
+# @name table_transportadora
+GET {{baseUrl}}/transportadora?page=1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+###
+
+########## rotas relacionadas a seguro transportadora #############
+
+# @name criar_segurotransportadora
+POST {{baseUrl}}/segurotransportadora
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"bidId": "f6ecef39-38c9-4f44-9203-2ab4befa46d3",
+"descricao": "Valor geral",
+"valor": "0.260%"
+}
+
+###
+########## rotas relacionadas a seguro valor geral #############
+
+# @name criar_valorGeral
+POST {{baseUrl}}/valorgeral
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+{
+"bidId": "b64215a6-6c81-415f-b804-fb8d7324b111",
+"descricao": "Valor geral",
+"valor": "0.160%"
+}
+
+###
+
+# @name criar_valores_completos
+POST {{baseUrl}}/valorbid
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "bidId": "1169bb1b-11f1-4857-a948-ad5eb4374f63",
+  "seguroTransportadora": {
+    "descricao": "Seguro para a transportadora",
+    "valor": "500"
+  },
+  "valorGeralDrr": {
+    "descricao": "Valor geral de DRR",
+    "valor": "1000"
+  },
+  "fretes": {
+    "descricao": "Frete para transporte",
+    "valorMinimo": "200",
+    "valorKg": "5"
+  }
+}
+
+
+########## rotas relacionadas a seguro outros #############
+
+# @name criar_outros
+POST {{baseUrl}}/outros
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+"bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+"descricao": "ESCOLTA",
+"valor": "900.00"
+}
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "TAXA COLETA",
+# "valor": "0.0250"
+# }
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "TAXA ENTREGA",
+# "valor": "0.0250"
+# }
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "TAXA EMISSÃO CTE",
+# "valor": "'10.00"
+# }
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "TAXA DG",
+# "valor": "53.00"
+# }
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "TAXA PALETIZAÇÃO",
+# "valor": "63.00"
+# }
+# {
+# "bidId": "b33468cf-3a5a-4841-9fee-820318897a36",
+# "descricao": "ICMS",
+# "valor": "12.00"
+# }
+
+###
+
+########## rotas relacionadas a fretes #############
+
+# @name criar_fretes
+POST {{baseUrl}}/fretes
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+"bidId": "25ad065a-34b0-4286-ad75-97ede15d75bb",
+"descricao": "D+4",
+"valorMinimo": "94.80",
+"valorKg": "4.74"
+}
+
+###
+
+########## rotas relacionadas a upload cte #############
+# @name upload_cte
+POST {{baseUrl}}/uploadcte
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cteProc xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"4.00\"><CTe xmlns=\"http://www.portalfiscal.inf.br/cte\"><infCte versao=\"4.00\" Id=\"CTe13240847705660000565570020000565581000565587\"><ide><cUF>13</cUF><cCT>00056558</cCT><CFOP>6352</CFOP><natOp>PRESTACAO DE SERVICO DE TRANSPORTE A ESTABELECIMENTO INDUSTR</natOp><mod>57</mod><serie>2</serie><nCT>56558</nCT><dhEmi>2024-08-09T09:51:00-03:00</dhEmi><tpImp>1</tpImp><tpEmis>1</tpEmis><cDV>7</cDV><tpAmb>1</tpAmb><tpCTe>0</tpCTe><procEmi>0</procEmi><verProc>3.0.7.0</verProc><cMunEnv>1302603</cMunEnv><xMunEnv>MANAUS</xMunEnv><UFEnv>AM</UFEnv><modal>06</modal><tpServ>0</tpServ><cMunIni>1302603</cMunIni><xMunIni>MANAUS</xMunIni><UFIni>AM</UFIni><cMunFim>3519071</cMunFim><xMunFim>HORTOLANDIA</xMunFim><UFFim>SP</UFFim><retira>1</retira><indIEToma>1</indIEToma><toma3><toma>0</toma></toma3></ide><compl><xCaracAd>Multimodal</xCaracAd><xEmi>Pedro Fernando Chime</xEmi><fluxo><xOrig>MAO</xOrig><xDest>HOR</xDest><xRota>MAOHOR</xRota></fluxo><origCalc>MANAUS</origCalc><destCalc>HORTOLANDIA</destCalc><xObs>Total Aproximado de Impostos : 1.488,08;MODAL AEREOMAS2401025</xObs><ObsCont xCampo=\"motorista\"><xTexto>AGUARDANDO MOTORISTA</xTexto></ObsCont><ObsCont xCampo=\"cpf_motorista\"><xTexto>234.167.398-84</xTexto></ObsCont><ObsCont xCampo=\"placa\"><xTexto>TST0000</xTexto></ObsCont></compl><emit><CNPJ>47705660000565</CNPJ><IE>042155630</IE><xNome>SUPERSONIC LOGISTICA E TRANSPORTES LTDA</xNome><xFant>SUPERSONIC MANAUS</xFant><enderEmit><xLgr>RUA MATRINXA, 300 C</xLgr><nro>0</nro><xBairro>DIST. INDUSTRIAL</xBairro><cMun>1302603</cMun><xMun>MANAUS</xMun><CEP>69075150</CEP><UF>AM</UF><fone>09231822949</fone></enderEmit><CRT>3</CRT></emit><rem><CNPJ>10142624000369</CNPJ><IE>063010658</IE><xNome>COMPALEAD ELETRONICA DO BRASIL INDUSTRIA E COMERCIO LTDA</xNome><xFant>COMPALEAD ELETRONICA DO BRASIL INDUSTRIA E COMERCI</xFant><enderReme><xLgr>JAVARI</xLgr><nro>1055</nro><xCpl>LOTE 2.47 ECV</xCpl><xBairro>DISTRITO INDUSTRIAL</xBairro><cMun>1302603</cMun><xMun>MANAUS</xMun><CEP>69075110</CEP><UF>AM</UF><cPais>1058</cPais><xPais>BRASIL</xPais></enderReme></rem><dest><CNPJ>04809335000378</CNPJ><IE>748083817115</IE><xNome>SYNCREON SOLUCOES LOGISTICAS LTDA</xNome><fone>00000000000</fone><enderDest><xLgr>AV. EMANCIPACAO,5000</xLgr><nro>0</nro><xBairro>PARQUE DOS PINHEIROS</xBairro><cMun>3519071</cMun><xMun>HORTOLANDIA</xMun><CEP>13186903</CEP><UF>SP</UF><cPais>1058</cPais><xPais>BRASIL</xPais></enderDest></dest><vPrest><vTPrest>7388.65</vTPrest><vRec>7388.65</vRec><Comp><xNome>FRETE PESO</xNome><vComp>2654.40</vComp></Comp><Comp><xNome>FRETE VALOR</xNome><vComp>3837.61</vComp></Comp><Comp><xNome>TAXAEMICTRC</xNome><vComp>10.00</vComp></Comp><Comp><xNome>ICMS</xNome><vComp>886.64</vComp></Comp></vPrest><imp><ICMS><ICMS00><CST>00</CST><vBC>7388.65</vBC><pICMS>12.00</pICMS><vICMS>886.64</vICMS></ICMS00></ICMS><vTotTrib>1488.07</vTotTrib></imp><infCTeNorm><infCarga><vCarga>2398508.64</vCarga><proPred>DIVERSOS</proPred><infQ><cUnid>01</cUnid><tpMed>PESO BRUTO</tpMed><qCarga>559.9999</qCarga></infQ><infQ><cUnid>03</cUnid><tpMed>VOLUMES</tpMed><qCarga>44.0000</qCarga></infQ><infQ><cUnid>00</cUnid><tpMed>PESO CUBADO</tpMed><qCarga>3.3533</qCarga></infQ><vCargaAverb>2398508.64</vCargaAverb></infCarga><infDoc><infNFe><chave>13240810142624000369550010000019691903244402</chave><dPrev>2024-08-21</dPrev></infNFe></infDoc><infModal versaoModal=\"4.00\"><multimodal><COTM>0816-1216</COTM><indNegociavel>0</indNegociavel></multimodal></infModal></infCTeNorm><infRespTec><CNPJ>62351820000266</CNPJ><xContato>ARNALDO DOS SANTOS ALMEIDA NETO</xContato><email>suporte@datapar.com.br</email><fone>01930148080</fone></infRespTec></infCte><infCTeSupl><qrCodCTe>https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=13240847705660000565570020000565581000565587&amp;tpAmb=1</qrCodCTe></infCTeSupl><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\" /><Reference URI=\"#CTe13240847705660000565570020000565581000565587\"><Transforms><Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\" /><Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\" /><DigestValue>GXmjE4B+1PMJeBVImxJJKZeHnZQ=</DigestValue></Reference></SignedInfo><SignatureValue>JeiYs8dCo+x4LzHbKPVz3LFn4g6+sMCNi5NaluukceZ1Ffe10f9uDHU25IM85EP5IwW7bAkiQBsM0nuWsP8J/J+wFRWis1dsSCrM5SSjiWIgTQueNaY7WDAYG3Kk7DqoSfWvGR55Y1YIfoY1PIpcm8v085U2Y5YhlUExRjrP6zQBIJgkfalUTSpIskBtRaMxKdRTBj1nO9jgjHCXUO0DOiWNSr6FQ1t884V8ZfBLdHf3K5VGJRN41m+7SmAm7kBQ30p0nqvwVCh0je04F2NdSUcZcZZpfWnR1lsGz2+aok4ZUd+kQqtQrVs4oKrIXhO+wpbDt+sO+71Y2yx/I4SVAg==</SignatureValue><KeyInfo><X509Data><X509Certificate>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</X509Certificate></X509Data></KeyInfo></Signature></CTe><protCTe versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/cte\"><infProt Id=\"CTe313240006211192\"><tpAmb>1</tpAmb><verAplic>RS20240809103627</verAplic><chCTe>13240847705660000565570020000565581000565587</chCTe><dhRecbto>2024-08-09T10:52:46-03:00</dhRecbto><nProt>313240006211192</nProt><digVal>GXmjE4B+1PMJeBVImxJJKZeHnZQ=</digVal><cStat>100</cStat><xMotivo>Autorizado o uso do CT-e</xMotivo></infProt></protCTe></cteProc>"
+}
+
+###
+
+
+########## rotas relacionadas a validacao com divergencias #############
+
+# @name criar_produtos
+POST {{baseUrl}}/produto
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "partNumber": "71AEGSM2SB2",
+  "dimensaoCaixa": "480X380X300",
+  "standard": "1.71",
+  "upper": "1.75",
+  "lower": "1.67",
+  "quantidadeMax": "120"
+}
+
+
+########## rotas relacionadas a validacao com divergencias #############
+
+# @name criar_validacao_com_divergencias
+POST {{baseUrl}}/validacao
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "produtoId": "8956923c-d7f0-4d25-93b8-71ca1de3c4b4",
+  "bidId": "1169bb1b-11f1-4857-a948-ad5eb4374f63",
+  "cteId": "df3dd501-aa42-46e1-9327-6d8644e5ca49",
+    "divergencias": [
+    {
+      "nomenclatura": "Valor total",
+      "valorEsperado": "55 kg",
+      "valorDivergente": "65 kg"
+    },
+    {
+      "nomenclatura": "Peso cubado",
+      "valorEsperado": "15 kg",
+      "valorDivergente": "30 kg"
+    }
+  ]
+}
+###
+
+# @name table_validacao
+GET {{baseUrl}}/validacao?page=0
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+### Obter detalhes de uma validação
+# @name detalhe_validacao
+GET {{baseUrl}}/validacao/580ce151-2a3c-4cfb-ad4c-3ab42e8dc21f
+Authorization: Bearer {{authToken}}
+
+###
+
+### Obter divergências por validação
+# @name detalhe_divergencias
+GET {{baseUrl}}/divergencias/validacao/580ce151-2a3c-4cfb-ad4c-3ab42e8dc21f
+Authorization: Bearer {{authToken}}
+
+###
+
+### Obter seguros e valores gerais de Bids de uma transportadora
+# @name obter_seguros_valores_transportadora
+GET {{baseUrl}}/selectseguros
+Authorization: Bearer {{authToken}}
+
+###
+
+### Obter seguros e valores gerais de Bids de uma transportadora
+# @name obter_seguros_valores_transportadora
+GET {{baseUrl}}/selecttransportadora
+Authorization: Bearer {{authToken}}
+###
+
+### Obter seguros e valores gerais de Bids de uma transportadora
+# @name obter_seguros_valores_transportadora
+GET {{baseUrl}}/selectdestino
+Authorization: Bearer {{authToken}}
+###
+
+# @name obter_seguros_valores_transportadora
+GET {{baseUrl}}/selectorigem
+Authorization: Bearer {{authToken}}
+###
+
+# @name obter_seguros_valores_transportadora
+GET {{baseUrl}}/selectorigem
+Authorization: Bearer {{authToken}}
+
+
+
+### Obter seguros e valores gerais de Bids de uma transportadora
+# @name obter_seguros_valores_transportadora
+POST  {{baseUrl}}/dadosvalidacao
+Authorization: Bearer {{authToken}}
+
+
+
