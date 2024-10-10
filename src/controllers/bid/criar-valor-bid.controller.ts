@@ -16,7 +16,7 @@ import {
 } from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
-    bidId: z.string(),
+    // bidId: z.string(),
     seguroTransportadora: z.object({
         descricao: z.string(),
         percentual: z.string()
@@ -49,12 +49,11 @@ export class CriarValorBidController {
         @Body(bodyValidationPipe) body: CriarValorBidBodySchema
     ) {
         const {
-            bidId,
             seguroTransportadora,
             seguroCompal,
             frete
         } = body;
-
+const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
         // Verifica se o BID existe
         const bidExists = await this.prisma.bid.findUnique({
             where: { id: bidId },
