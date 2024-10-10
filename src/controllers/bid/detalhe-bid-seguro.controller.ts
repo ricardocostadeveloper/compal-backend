@@ -51,12 +51,16 @@ export class SegurosBidController {
         valorKg: true
       }
     });
-
+    var status
+    if (fretes == null && valorGeralDrr ==null && seguros ==null && outros ==null){
+      status = 1;
+    }
     return {
       seguros,
       outros,
       valorGeralDrr,
       fretes,
+      status,
     };
   }
 }

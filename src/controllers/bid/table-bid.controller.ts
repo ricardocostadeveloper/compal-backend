@@ -34,7 +34,7 @@ export class TableBidController {
             take: perPage,
             skip: page * perPage, // Remove o -1 para começar do índice 0
             orderBy: {
-                id: 'asc',
+                createdAt: 'asc',
             },
             select: {
                 id: true,
