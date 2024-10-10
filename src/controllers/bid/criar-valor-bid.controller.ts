@@ -16,7 +16,7 @@ import {
 } from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
-    // bidId: z.string(),
+    bidId: z.any(),
     seguroTransportadora: z.object({
         descricao: z.string(),
         percentual: z.string()
@@ -45,7 +45,7 @@ export class CriarValorBidController {
     
     @Post()
     async handle(
-        @Body(bodyValidationPipe) body: any
+        @Body(bodyValidationPipe) body: CriarValorBidBodySchema
         
     ) {
         console.log('Dados recebidos no backend:', body); // Aqui você pode ver o corpo da requisição
