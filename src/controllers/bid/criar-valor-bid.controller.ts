@@ -48,7 +48,7 @@ export class CriarValorBidController {
         @Body(bodyValidationPipe) body: CriarValorBidBodySchema
         
     ) {
-        console.log('Dados recebidos no backend:', body); // Aqui você pode ver o corpo da requisição
+        console.log('Dados recebidos no backend:', bodyValidationPipe); // Aqui você pode ver o corpo da requisição
 
         const {
             bidId,
