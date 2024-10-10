@@ -20,7 +20,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-"email": "joelson5@gmail.com",
+"email": "joelson7@gmail.com",
 "password":"1234"
 }
 
@@ -153,7 +153,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "bidId": "1169bb1b-11f1-4857-a948-ad5eb4374f63",
+  "bidId": "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b",
   "seguroTransportadora": {
     "descricao": "Seguro para a transportadora",
     "percentual": "500"
