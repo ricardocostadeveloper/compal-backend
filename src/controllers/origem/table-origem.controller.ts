@@ -40,7 +40,7 @@ export class TableOrigemController {
 
     @Get()
     async handle(@Query('page', pageValidationPipe) page: PageQueryParamSchema) {
-        const perPage = 5; // Quantidade de registros por página
+        const perPage = 10; // Quantidade de registros por página
 
         // Contar o total de registros na tabela origem
         const totalOrigens = await this.prisma.origem.count();
