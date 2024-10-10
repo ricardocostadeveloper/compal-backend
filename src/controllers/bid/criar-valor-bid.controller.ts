@@ -16,6 +16,7 @@ import {
 } from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
+    bidId: z.string(),
     seguroTransportadora: z.object({
         descricao: z.string(),
         percentual: z.string()
@@ -25,11 +26,12 @@ const criarValorBidBodySchema = z.object({
         percentual: z.string()
     }).optional(),
     frete: z.object({
-        fretePesoMinimo: z.string(),
-        fretePesoMaximo: z.string(),
         operacao: z.string(),
+        fretePesoMinimo: z.string(),
+        fretePesoMaximo: z.string()
     }).optional(),
 });
+
 
 const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
@@ -41,20 +43,18 @@ export class CriarValorBidController {
     constructor(
         private prisma: PrismaService
     ) {}
-    
+
     @Post()
     async handle(
         @Body(bodyValidationPipe) body: CriarValorBidBodySchema
-        
     ) {
-        console.log('Dados recebidos no backend:', body); // Aqui você pode ver o corpo da requisição
-
         const {
+            bidId,
             seguroTransportadora,
             seguroCompal,
             frete
         } = body;
-const bidId="14b1bb4b-e5ca-4868-81cf-efa2912c7f7b";
+
         // Verifica se o BID existe
         const bidExists = await this.prisma.bid.findUnique({
             where: { id: bidId },
