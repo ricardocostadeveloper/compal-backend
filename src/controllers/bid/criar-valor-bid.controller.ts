@@ -16,7 +16,7 @@ import {
 } from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
-    bidId: z.string(),
+    // bidId: z.string(),
     seguroTransportadora: z.object({
         descricao: z.string(),
         percentual: z.string()
