@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3333
+@baseUrl = http://192.168.195.40:3333
 @authToken = {{authenticate.response.body.access_token}}
 
 ########## rotas relacionadas a usuario #############
@@ -156,16 +156,16 @@ Authorization: Bearer {{authToken}}
   "bidId": "1169bb1b-11f1-4857-a948-ad5eb4374f63",
   "seguroTransportadora": {
     "descricao": "Seguro para a transportadora",
-    "valor": "500"
+    "percentual": "500"
   },
-  "valorGeralDrr": {
+  "seguroCompal": {
     "descricao": "Valor geral de DRR",
-    "valor": "1000"
+    "percentual": "1000"
   },
-  "fretes": {
-    "descricao": "Frete para transporte",
-    "valorMinimo": "200",
-    "valorKg": "5"
+  "frete": {
+    "fretePesoMinimo": "200",
+    "fretePesoMaximo": "5",
+    "operacao": "Frete para transporte"
   }
 }
 
