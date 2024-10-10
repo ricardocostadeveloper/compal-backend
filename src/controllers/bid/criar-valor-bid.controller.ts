@@ -15,26 +15,26 @@ import {
     PrismaService
 } from "src/prisma/prisma.service";
 
-const criarValorBidBodySchema = z.object({
-    bidId: z.string(),
-    seguroTransportadora: z.object({
-        descricao: z.string(),
-        percentual: z.string()
-    }).optional(),
-    seguroCompal: z.object({
-        descricao: z.string(),
-        percentual: z.string()
-    }).optional(),
-    frete: z.object({
-        fretePesoMinimo: z.string(),
-        fretePesoMaximo: z.string(),
-        operacao: z.string(),
-    }).optional(),
-});
+// const criarValorBidBodySchema = z.object({
+//     bidId: z.string(),
+//     seguroTransportadora: z.object({
+//         descricao: z.string(),
+//         percentual: z.string()
+//     }).optional(),
+//     seguroCompal: z.object({
+//         descricao: z.string(),
+//         percentual: z.string()
+//     }).optional(),
+//     frete: z.object({
+//         fretePesoMinimo: z.string(),
+//         fretePesoMaximo: z.string(),
+//         operacao: z.string(),
+//     }).optional(),
+// });
 
-const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
+// const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
-type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
+// type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
 
 @Controller('/valorbid')
 // @UseGuards(JwtAuthGuard)
@@ -45,7 +45,7 @@ export class CriarValorBidController {
     
     @Post()
     async handle(
-        @Body(bodyValidationPipe) body: CriarValorBidBodySchema
+        @Body() body: any
         
     ) {
         console.log('Dados recebidos no backend:', body); // Aqui você pode ver o corpo da requisição
