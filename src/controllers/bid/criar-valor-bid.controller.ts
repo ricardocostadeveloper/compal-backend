@@ -32,6 +32,7 @@ const criarValorBidBodySchema = z.object({
     }).optional(),
 });
 
+console.log('Dados recebidos no backend:', criarValorBidBodySchema); // Aqui você pode ver o corpo da requisição
 const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
 type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
@@ -48,7 +49,6 @@ export class CriarValorBidController {
         @Body(bodyValidationPipe) body: CriarValorBidBodySchema
         
     ) {
-        console.log('Dados recebidos no backend:', bodyValidationPipe); // Aqui você pode ver o corpo da requisição
 
         const {
             bidId,
