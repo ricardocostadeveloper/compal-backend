@@ -26,7 +26,7 @@ const criarValorBidBodySchema = z.object({
         percentual: z.string()
     }).optional(),
     frete: z.object({
-        descricao: z.string(),
+        operacao: z.string(),
         fretePesoMinimo: z.string(),
         fretePesoMaximo: z.string()
     }).optional(),
@@ -90,7 +90,7 @@ export class CriarValorBidController {
             if (frete) {
                 await tx.fretes.create({
                     data: {
-                        descricao: frete.descricao,
+                        descricao: frete.operacao,
                         valorMinimo: frete.fretePesoMinimo,
                         valorKg: frete.fretePesoMaximo,
                         bidId: bidId,

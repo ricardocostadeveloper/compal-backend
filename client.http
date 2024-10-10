@@ -307,6 +307,12 @@ GET {{baseUrl}}/divergencias/validacao/580ce151-2a3c-4cfb-ad4c-3ab42e8dc21f
 Authorization: Bearer {{authToken}}
 
 ###
+### Obter divergências por validação
+# @name detalhe_divergencias
+GET {{baseUrl}}/segurosbid/1169bb1b-11f1-4857-a948-ad5eb4374f63
+Authorization: Bearer {{authToken}}
+
+###
 
 ### Obter seguros e valores gerais de Bids de uma transportadora
 # @name obter_seguros_valores_transportadora
