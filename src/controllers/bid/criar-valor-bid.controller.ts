@@ -32,7 +32,6 @@ const criarValorBidBodySchema = z.object({
     }).optional(),
 });
 
-console.log('Dados recebidos no backend:', criarValorBidBodySchema); // Aqui você pode ver o corpo da requisição
 const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
 type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
@@ -43,12 +42,13 @@ export class CriarValorBidController {
     constructor(
         private prisma: PrismaService
     ) {}
-
+    
     @Post()
     async handle(
-        @Body(bodyValidationPipe) body: CriarValorBidBodySchema
+        @Body(bodyValidationPipe) body: any
         
     ) {
+        console.log('Dados recebidos no backend:', body); // Aqui você pode ver o corpo da requisição
 
         const {
             bidId,
