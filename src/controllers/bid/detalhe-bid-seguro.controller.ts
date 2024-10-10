@@ -52,8 +52,10 @@ export class SegurosBidController {
       }
     });
     var status
-    if (fretes == null && valorGeralDrr ==null && seguros ==null && outros ==null){
+    if (fretes == null || valorGeralDrr ==null || seguros ==null || outros ==null){
       status = 1;
+    }else{
+      status = 2;
     }
     return {
       seguros,
