@@ -12,6 +12,7 @@ export class SegurosBidController {
         bidId,
       },
       select:{
+        id:true,
         descricao:true,
         valor:true
       }
@@ -22,6 +23,7 @@ export class SegurosBidController {
         bidId,
       },
       select:{
+        id:true,
         descricao:true,
         valor:true
       }
@@ -32,6 +34,7 @@ export class SegurosBidController {
         bidId,
       },
       select:{
+        id:true,
         descricao:true,
         valor:true
       }
@@ -42,6 +45,7 @@ export class SegurosBidController {
         bidId,
       },
       select:{
+        id:true,
         descricao:true,
         valorMinimo:true,
         valorKg: true
