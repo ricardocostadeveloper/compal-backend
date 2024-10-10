@@ -104,7 +104,8 @@ export class CriarValorBidController {
         });
 
         return {
-            message: 'Dados associados ao BID criados com sucesso.'
+            message: 'Dados associados ao BID criados com sucesso.',
+            transaction
         };
     }
 }
