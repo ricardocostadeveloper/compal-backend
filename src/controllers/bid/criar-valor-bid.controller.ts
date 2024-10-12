@@ -67,6 +67,7 @@ export class CriarValorBidController {
 
             // Verifica se já existe um registro em 'outros' com a mesma descrição
             if (outros) {
+                console.log(outros)
                 const outrosExists = await tx.outros.findFirst({
                     where: { descricao: outros.descricao },
                 });
