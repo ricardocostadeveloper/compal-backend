@@ -7,7 +7,7 @@ export class SegurosBidController {
 
   @Get(':bidId')
   async getDetalhesByBidId(@Param('bidId') bidId: string) {
-    const seguros = await this.prisma.seguroTransportadora.findMany({
+    const segurosTransportadora = await this.prisma.seguroTransportadora.findMany({
       where: {
         bidId,
       },
@@ -29,7 +29,7 @@ export class SegurosBidController {
       }
     });
 
-    const valorGeralDrr = await this.prisma.valorGeralDrr.findMany({
+    const segurosCompal = await this.prisma.valorGeralDrr.findMany({
       where: {
         bidId,
       },
@@ -52,15 +52,15 @@ export class SegurosBidController {
       }
     });
     var status
-    if (fretes == null || valorGeralDrr ==null || seguros ==null || outros ==null){
+    if (fretes == null || segurosCompal == null || segurosTransportadora == null || outros == null){
       status = 1;
     }else{
       status = 2;
     }
     return {
-      seguros,
+      segurosTransportadora,
       outros,
-      valorGeralDrr,
+      segurosCompal,
       fretes,
       status,
     };
