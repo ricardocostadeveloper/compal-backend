@@ -114,6 +114,35 @@ export class CriarValorBidController {
                     }
                 });
             }
+
+
+            // Verifica se já existe um registro em 'fretes' com a mesma descrição
+            if (frete) {
+                const fretesExists = await tx.fretes.findFirst({
+                    where: { descricao: frete.operacao },
+                });
+
+                if (fretesExists) {
+                    // Atualiza o registro existente em 'fretes'
+                    await tx.fretes.update({
+                        where: { id: fretesExists.id },
+                        data: {
+                            valorMinimo: frete.fretePesoMinimo,
+                            valorKg: frete.fretePesoMaximo,
+                        },
+                    });
+                } else {
+                    // Insere um novo registro em 'fretes'
+                    await tx.fretes.create({
+                        data: {
+                            descricao: frete.operacao,
+                            valorMinimo: frete.fretePesoMinimo,
+                            valorKg: frete.fretePesoMaximo,
+                            bidId: bid,
+                        }
+                    });
+                }
+            }
         }).catch(err => {
             // Lidar com erro da transação
             throw new InternalServerErrorException('Erro ao salvar os dados.');
