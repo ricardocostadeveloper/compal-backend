@@ -5,19 +5,17 @@ import {
     BadRequestException,
     InternalServerErrorException
 } from "@nestjs/common";
-import {
-    z
-} from "zod";
-import {
-    ZodValidationPipe
-} from "src/pipes/zod-validation-pipe";
-import {
-    PrismaService
-} from "src/prisma/prisma.service";
+import { z } from "zod";
+import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
+import { PrismaService } from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
-    // bidId: z.string(),
+    bidId: z.string(),
     seguroTransportadora: z.object({
+        descricao: z.string(),
+        percentual: z.string()
+    }).optional(),
+    outros: z.object({
         descricao: z.string(),
         percentual: z.string()
     }).optional(),
@@ -32,7 +30,6 @@ const criarValorBidBodySchema = z.object({
     }).optional(),
 });
 
-
 const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
 type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
@@ -40,20 +37,12 @@ type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
 @Controller('/valorbid')
 // @UseGuards(JwtAuthGuard)
 export class CriarValorBidController {
-    constructor(
-        private prisma: PrismaService
-    ) {}
+    constructor(private prisma: PrismaService) {}
 
     @Post()
-    async handle(
-        @Body(bodyValidationPipe) body: CriarValorBidBodySchema
-    ) {
-        const {
-            seguroTransportadora,
-            seguroCompal,
-            frete
-        } = body;
-const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
+    async handle(@Body(bodyValidationPipe) body: CriarValorBidBodySchema) {
+        const { bidId, seguroTransportadora, seguroCompal, frete, outros } = body;
+        
         // Verifica se o BID existe
         const bidExists = await this.prisma.bid.findUnique({
             where: { id: bidId },
@@ -61,6 +50,7 @@ const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
         if (!bidExists) {
             throw new BadRequestException('BID não encontrado.');
         }
+        const bid = bidExists.id;
 
         // Começa uma transação
         const transaction = await this.prisma.$transaction(async (tx) => {
@@ -70,9 +60,35 @@ const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
                     data: {
                         descricao: seguroTransportadora.descricao,
                         valor: seguroTransportadora.percentual,
-                        bidId: bidId,
+                        bidId: bid,
                     }
                 });
+            }
+
+            // Verifica se já existe um registro em 'outros' com a mesma descrição
+            if (outros) {
+                const outrosExists = await tx.outros.findFirst({
+                    where: { descricao: outros.descricao },
+                });
+
+                if (outrosExists) {
+                    // Atualiza o registro existente em 'outros'
+                    await tx.outros.update({
+                        where: { id: outrosExists.id },
+                        data: {
+                            valor: outros.percentual,
+                        },
+                    });
+                } else {
+                    // Insere um novo registro em 'outros'
+                    await tx.outros.create({
+                        data: {
+                            descricao: outros.descricao,
+                            valor: outros.percentual,
+                            bidId: bid,
+                        }
+                    });
+                }
             }
 
             // Insere dados em ValorGeralDrr, se disponíveis
@@ -81,7 +97,7 @@ const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
                     data: {
                         descricao: seguroCompal.descricao,
                         valor: seguroCompal.percentual,
-                        bidId: bidId,
+                        bidId: bid,
                     }
                 });
             }
@@ -103,7 +119,7 @@ const bidId = "14b1bb4b-e5ca-4868-81cf-efa2912c7f7b"
         });
 
         return {
-            message: 'Dados associados ao BID criados com sucesso.',
+            message: 'Dados associados ao BID criados ou atualizados com sucesso.',
             transaction
         };
     }

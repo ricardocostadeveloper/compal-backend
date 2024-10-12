@@ -309,7 +309,7 @@ Authorization: Bearer {{authToken}}
 ###
 ### Obter divergências por validação
 # @name detalhe_divergencias
-GET {{baseUrl}}/segurosbid/1169bb1b-11f1-4857-a948-ad5eb4374f63
+GET {{baseUrl}}/segurosbid/14b1bb4b-e5ca-4868-81cf-efa2912c7f7b
 Authorization: Bearer {{authToken}}
 
 ###
