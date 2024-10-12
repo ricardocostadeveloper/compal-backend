@@ -24,7 +24,8 @@ export class SegurosBidController {
       },
       select:{
         id:true,
-        descricao:true
+        descricao:true,
+        valor:true
       }
     });
 
