@@ -103,23 +103,10 @@ export class CriarValorBidController {
                 });
             }
 
-            // Insere dados em Fretes, se disponíveis
-            if (frete) {
-                await tx.fretes.create({
-                    data: {
-                        descricao: frete.operacao,
-                        valorMinimo: frete.fretePesoMinimo,
-                        valorKg: frete.fretePesoMaximo,
-                        bidId: bidId,
-                    }
-                });
-            }
-
-
             // Verifica se já existe um registro em 'fretes' com a mesma descrição
             if (frete) {
                 const fretesExists = await tx.fretes.findFirst({
-                    where: { descricao: frete.operacao },
+                    where: { descricao: frete.operacao, bidId: bidId},
                 });
 
                 if (fretesExists) {
