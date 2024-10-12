@@ -69,7 +69,7 @@ export class CriarValorBidController {
             if (outros) {
                 console.log(outros)
                 const outrosExists = await tx.outros.findFirst({
-                    where: { descricao: outros.descricao },
+                    where: { descricao: outros.descricao,  bidId: bidId },
                 });
 
                 if (outrosExists) {
