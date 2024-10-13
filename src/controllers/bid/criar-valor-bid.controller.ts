@@ -73,9 +73,7 @@ export class CriarValorBidController {
             if (seguroTransportadora) {
                 const seguroTransportadoraExists = await tx.seguroTransportadora.findFirst({
                     where: {
-                        descricao: seguroTransportadora.descricao,
-                        bidId: bidId
-                    },
+                        descricao: seguroTransportadora.descricao                    },
                 });
 
                 if (seguroTransportadoraExists) {
@@ -90,7 +88,7 @@ export class CriarValorBidController {
                     });
                 } else {
                     // Insere um novo registro em 'seguroTransportadora'
-                    await tx.valorGeralDrr.create({
+                    await tx.seguroTransportadora.create({
                         data: {
                             descricao: seguroTransportadora.descricao,
                             valor: seguroTransportadora.percentual,
