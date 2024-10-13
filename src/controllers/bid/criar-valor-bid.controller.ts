@@ -73,7 +73,9 @@ export class CriarValorBidController {
             if (seguroTransportadora) {
                 const seguroTransportadoraExists = await tx.seguroTransportadora.findFirst({
                     where: {
-                        descricao: seguroTransportadora.descricao                    },
+                        descricao: seguroTransportadora.descricao,
+                        bidId: bid
+                    },
                 });
 
                 if (seguroTransportadoraExists) {
