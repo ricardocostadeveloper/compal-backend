@@ -68,18 +68,8 @@ export class CriarValorBidController {
 
         // Começa uma transação
         const transaction = await this.prisma.$transaction(async (tx) => {
-            // Insere dados em SeguroTransportadora, se disponíveis
-            if (seguroTransportadora) {
-                await tx.seguroTransportadora.create({
-                    data: {
-                        descricao: seguroTransportadora.descricao,
-                        valor: seguroTransportadora.percentual,
-                        bidId: bid,
-                    }
-                });
-            }
 
-            // Verifica se já existe um registro em 'seguroCompal' com a mesma descrição
+            // Verifica se já existe um registro em 'SeguroTransportadora' com a mesma descrição
             if (seguroTransportadora) {
                 const seguroTransportadoraExists = await tx.seguroTransportadora.findFirst({
                     where: {
@@ -89,7 +79,7 @@ export class CriarValorBidController {
                 });
 
                 if (seguroTransportadoraExists) {
-                    // Atualiza o registro existente em 'seguroTransportadora'
+                    // Atualiza o registro existente em 'SeguroTransportadora'
                     await tx.seguroTransportadora.update({
                         where: {
                             id: seguroTransportadoraExists.id
