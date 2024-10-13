@@ -5,9 +5,15 @@ import {
     BadRequestException,
     InternalServerErrorException
 } from "@nestjs/common";
-import { z } from "zod";
-import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
-import { PrismaService } from "src/prisma/prisma.service";
+import {
+    z
+} from "zod";
+import {
+    ZodValidationPipe
+} from "src/pipes/zod-validation-pipe";
+import {
+    PrismaService
+} from "src/prisma/prisma.service";
 
 const criarValorBidBodySchema = z.object({
     bidId: z.string(),
@@ -32,7 +38,7 @@ const criarValorBidBodySchema = z.object({
 
 const bodyValidationPipe = new ZodValidationPipe(criarValorBidBodySchema);
 
-type CriarValorBidBodySchema = z.infer<typeof criarValorBidBodySchema>;
+type CriarValorBidBodySchema = z.infer < typeof criarValorBidBodySchema > ;
 
 @Controller('/valorbid')
 // @UseGuards(JwtAuthGuard)
@@ -41,11 +47,19 @@ export class CriarValorBidController {
 
     @Post()
     async handle(@Body(bodyValidationPipe) body: CriarValorBidBodySchema) {
-        const { bidId, seguroTransportadora, seguroCompal, frete, outros } = body;
-        
+        const {
+            bidId,
+            seguroTransportadora,
+            seguroCompal,
+            frete,
+            outros
+        } = body;
+
         // Verifica se o BID existe
         const bidExists = await this.prisma.bid.findUnique({
-            where: { id: bidId },
+            where: {
+                id: bidId
+            },
         });
         if (!bidExists) {
             throw new BadRequestException('BID não encontrado.');
@@ -65,17 +79,53 @@ export class CriarValorBidController {
                 });
             }
 
+            // Verifica se já existe um registro em 'seguroCompal' com a mesma descrição
+            if (seguroTransportadora) {
+                const seguroTransportadoraExists = await tx.seguroTransportadora.findFirst({
+                    where: {
+                        descricao: seguroTransportadora.descricao,
+                        bidId: bidId
+                    },
+                });
+
+                if (seguroTransportadoraExists) {
+                    // Atualiza o registro existente em 'seguroTransportadora'
+                    await tx.seguroTransportadora.update({
+                        where: {
+                            id: seguroTransportadoraExists.id
+                        },
+                        data: {
+                            valor: seguroTransportadora.percentual,
+                        },
+                    });
+                } else {
+                    // Insere um novo registro em 'seguroTransportadora'
+                    await tx.valorGeralDrr.create({
+                        data: {
+                            descricao: seguroTransportadora.descricao,
+                            valor: seguroTransportadora.percentual,
+                            bidId: bid,
+                        }
+                    });
+                }
+            }
+
             // Verifica se já existe um registro em 'outros' com a mesma descrição
             if (outros) {
                 console.log(outros)
                 const outrosExists = await tx.outros.findFirst({
-                    where: { descricao: outros.descricao,  bidId: bidId },
+                    where: {
+                        descricao: outros.descricao,
+                        bidId: bidId
+                    },
                 });
 
                 if (outrosExists) {
                     // Atualiza o registro existente em 'outros'
                     await tx.outros.update({
-                        where: { id: outrosExists.id },
+                        where: {
+                            id: outrosExists.id
+                        },
                         data: {
                             valor: outros.percentual,
                         },
@@ -92,27 +142,52 @@ export class CriarValorBidController {
                 }
             }
 
-            // Insere dados em ValorGeralDrr, se disponíveis
+            // Verifica se já existe um registro em 'seguroCompal' com a mesma descrição
             if (seguroCompal) {
-                await tx.valorGeralDrr.create({
-                    data: {
+                const seguroCompalExists = await tx.valorGeralDrr.findFirst({
+                    where: {
                         descricao: seguroCompal.descricao,
-                        valor: seguroCompal.percentual,
-                        bidId: bid,
-                    }
+                        bidId: bidId
+                    },
                 });
+
+                if (seguroCompalExists) {
+                    // Atualiza o registro existente em 'seguroCompal'
+                    await tx.valorGeralDrr.update({
+                        where: {
+                            id: seguroCompalExists.id
+                        },
+                        data: {
+                            valor: seguroCompal.percentual,
+                        },
+                    });
+                } else {
+                    // Insere um novo registro em 'seguroCompal'
+                    await tx.valorGeralDrr.create({
+                        data: {
+                            descricao: seguroCompal.descricao,
+                            valor: seguroCompal.percentual,
+                            bidId: bid,
+                        }
+                    });
+                }
             }
 
             // Verifica se já existe um registro em 'fretes' com a mesma descrição
             if (frete) {
                 const fretesExists = await tx.fretes.findFirst({
-                    where: { descricao: frete.operacao, bidId: bidId},
+                    where: {
+                        descricao: frete.operacao,
+                        bidId: bidId
+                    },
                 });
 
                 if (fretesExists) {
                     // Atualiza o registro existente em 'fretes'
                     await tx.fretes.update({
-                        where: { id: fretesExists.id },
+                        where: {
+                            id: fretesExists.id
+                        },
                         data: {
                             valorMinimo: frete.fretePesoMinimo,
                             valorKg: frete.fretePesoMaximo,
