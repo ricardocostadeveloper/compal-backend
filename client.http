@@ -307,9 +307,15 @@ GET {{baseUrl}}/divergencias/validacao/580ce151-2a3c-4cfb-ad4c-3ab42e8dc21f
 Authorization: Bearer {{authToken}}
 
 ###
-### Obter divergências por validação
-# @name detalhe_divergencias
+
+### Obter detalhes bib seguros
+# @name detalhe_seguros_bid
 GET {{baseUrl}}/segurosbid/14b1bb4b-e5ca-4868-81cf-efa2912c7f7b
+Authorization: Bearer {{authToken}}
+
+### Obter detalhes bib
+# @name detalhe_bid
+GET {{baseUrl}}/detalhesbid/14b1bb4b-e5ca-4868-81cf-efa2912c7f7b
 Authorization: Bearer {{authToken}}
 
 ###

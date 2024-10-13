@@ -6,9 +6,9 @@ export class DestinoService {
   constructor(private prisma: PrismaService) {}
 
   // Método para buscar o produto pelo partNumber
-  async getDestinoByPartNumber(aereporto: string) {
-    return this.prisma.destino.findMany({
-      where: { aereporto },
+  async getDestinoByPartNumber(descricao: string) {
+    return this.prisma.destino.findFirst({
+      where: { descricao }
     });
   }
 }
