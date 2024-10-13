@@ -39,6 +39,7 @@ import { TableProdutosController } from './controllers/produto/table-transportad
 import { OrigemSelectController } from './controllers/bid/select-origem-bid.controller';
 import { CriarValorBidController } from './controllers/bid/criar-valor-bid.controller';
 import { SegurosBidController } from './controllers/bid/detalhe-bid-seguro.controller';
+import { DetalhesBidController } from './controllers/bid/detalhe-bid-geral.controller';
 
 @Module({
   imports: [
@@ -76,7 +77,8 @@ import { SegurosBidController } from './controllers/bid/detalhe-bid-seguro.contr
     TableProdutosController,
     OrigemSelectController,
     CriarValorBidController,
-    SegurosBidController
+    SegurosBidController,
+    DetalhesBidController
   ],
   providers: [
     NfeService,
