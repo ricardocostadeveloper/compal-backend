@@ -30,7 +30,7 @@ export class CriarTransportadoraController{
     ){
         const { descricao } = body
         
-        const autorId = "5d63b590-dae1-4c83-b285-2cd9610d2cb1";
+        const autorId = "75bd889b-c197-48c9-94b8-48971476616c";
 
 
         await this.prisma.transportadora.create({
