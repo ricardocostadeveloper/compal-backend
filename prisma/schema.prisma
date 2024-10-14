@@ -190,7 +190,7 @@ model ProdutoNf {
 //////////////////////////////////////////////
 model CteArquivo {
   id               String           @id @default(uuid())
-  chaveAcesso      String        @unique
+  chaveAcesso      String        
   modalCte         String
   numeroCte        String
   numeroPedido     String?
